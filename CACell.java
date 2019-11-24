@@ -31,7 +31,7 @@ public abstract class CACell {
 
 		if (crystal.getRuleName().compareTo(RuleNames.rule1) == 0) {
 			if (cellCount == crystal.getInitialAliveCell())
-				this.cellState = CACellState.FROZEN;
+				this.cellState = CACellState.VAPOUR;
 			else
 				this.cellState = cellState;
 		} else {
@@ -93,7 +93,27 @@ public abstract class CACell {
 		return desiredNeighbors;
 	}
 
+	protected int getTDNeighborsCount(CACellState state) {
 
+		int desiredNeighbors = 0;
+		try {
+			for (int j = -1; j < 2; j++) {
+				if (this.getCellXPos() - 1 >= 0 && this.getCellXPos() - 1 < getCrystal().getCrystalRows()
+						&& this.getCellYPos() + j >= 0 && this.getCellYPos() + j < getCrystal().getCrystalColumns()) {
+					if (getCrystal().getCellAt(this.getCellXPos() - 1, this.getCellYPos() + j).getCellState()
+							.compareTo(state) == 0) {
+						if (j != 0)
+							desiredNeighbors++;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			log.severe("Exception occured while getting Neighbor Count : " + e.toString());
+			desiredNeighbors = 0;
+		}
+		return desiredNeighbors;
+	}
 
 	
 	

@@ -3,6 +3,7 @@ package edu.neu.csye6200.ca;
 import java.util.logging.Logger;
 
 
+
 enum RuleNames {
 	rule1, rule2, rule3
 }
@@ -34,8 +35,14 @@ public class CARule extends CACell {
 	}
 	
 	private CACellState getRule1State() {
+		if (getTDNeighborsCount(CACellState.FROZEN) == 2) {
+			return CACellState.LIQUID;
+		} else if (getTDNeighborsCount(CACellState.FROZEN) == 1) {
+			return CACellState.FROZEN;
+		}
 		return getCellState();
 	}
 
-
+	
+	
 }

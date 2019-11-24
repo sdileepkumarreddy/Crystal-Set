@@ -36,7 +36,7 @@ public class CACrystal {
 	private void regionInitialize() {
 		for (int x = 0; x < crystalRows; x++) {
 			for (int y = 0; y < crystalColumns; y++) {
-				CACell ca = new CARule(this.ruleName, this, CACellState.FROZEN); // Based on the rule name the cells are
+				CACell ca = new CARule(this.ruleName, this, CACellState.VAPOUR); // Based on the rule name the cells are
 																				// initialized
 				ca.setCellXPos(x);
 				ca.setCellYPos(y);
@@ -45,7 +45,7 @@ public class CACrystal {
 			}
 		}
 	}
-	public CACrystal createNextCrystal() {
+	public CACrystal createNextCrystal(int counter) {
 		
 		CACrystal newCrystal = new CACrystal(this);
 		CACellState[][] newCellStates;
@@ -54,7 +54,7 @@ public class CACrystal {
 
 			if (newCrystal.ruleName.compareTo(RuleNames.rule1) == 0) {
 
-				newCellStates = nextCellStates();
+				newCellStates = nextCellStates(counter);
 
 				/*
 				 * Looping through each cell to determine the neighbors state and deciding the
@@ -84,19 +84,50 @@ public class CACrystal {
 		return arrCells[row][col];
 	}
 	
-	public CACellState[][] nextCellStates() {
+	public CACellState[][] nextCellStates(int counter) {
 
 		CACellState[][] nextStates = new CACellState[getCrystalRows()][getCrystalColumns()];
 
-		for (int i = 0; i < getCrystalRows(); i++) {
-			for (int j = 0; j < getCrystalColumns(); j++) {
-				nextStates[i][j] = getCellAt(i, j).getNextCellState();
-
+		int x = getCrystalRows()/2;
+		int y = getCrystalColumns()/2;
+		int innerRowCount = 0;
+		for(int i = (x-counter); i <= (x+ counter);i++) {
+			for(int j = (y-counter);j <= (y+ counter);j++) {
+				if(i % 2 == 0 && (j >= x-innerRowCount && j <= x+innerRowCount))
+				{
+					nextStates[i][j] = CACellState.FROZEN;
+					
+					
+				}
+				else if(i % 2 == 1 && (j >= x-innerRowCount && j <= x+innerRowCount-1)) {
+					nextStates[i][j] = CACellState.FROZEN;
+				}
+				
+				else
+				{
+					nextStates[i][j] = CACellState.VAPOUR;
+				}
 			}
+			if(i%2 == 0 && i < x)
+			{
+				innerRowCount++;
+			}
+			if(i%2 == 1 && i > x)
+			{
+				innerRowCount--;
+			}
+						
 		}
+//		for (int i = 0; i < getCrystalRows(); i++) {
+//			for (int j = 0; j < getCrystalColumns(); j++) {
+//				nextStates[i][j] = getCellAt(i, j).getNextCellState();
+//
+//			}
+//		}
 
 		return nextStates;
 	}
+	
 
 	// Getters and Setters
 

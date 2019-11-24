@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+
 import net.java.dev.designgridlayout.*;
 
 
@@ -39,15 +40,16 @@ public class CALauncher extends CAApp {
 	protected JLabel rulesLabel = null;
 	protected JLabel sleepTime = null;
 	protected JLabel generations = null;
-	protected JComboBox<Integer> rowsDropDown = null;
-	protected JComboBox<Integer> columnDropDown = null;
-	protected JComboBox<String> rulesDropDown = null;
-	protected JComboBox<Integer> sleepTimeDropDown = null;
-	protected JComboBox<Integer> generationsDropDown = null;
+	protected static JComboBox<Integer> rowsDropDown = null;
+	protected static JComboBox<Integer> columnDropDown = null;
+	protected static JComboBox<RuleNames> rulesDropDown = null;
+	protected static JComboBox<Integer> sleepTimeDropDown = null;
+	protected static JComboBox<Integer> generationsDropDown = null;
 	protected JButton startBtn = null;
 	protected JButton pauseBtn = null;
 	protected JButton resetBtn = null;
 	protected JButton rewindBtn = null;
+	protected JButton createButton = null;
 	protected static JLabel genCount = null;
 	protected static JLabel lblStatus = null;
 	private static final int FRAME_WIDTH = 1000;
@@ -179,8 +181,8 @@ public class CALauncher extends CAApp {
 		rulesLabel = new JLabel("Rules");
 		rulesLabel.setForeground(Color.WHITE);
 		sideMenuLayout.row().center().add(rulesLabel);
-		final String ruleNames[] = { "rule1", "Y","Z" };
-		rulesDropDown = new JComboBox<String>(ruleNames);
+		final RuleNames rulesNames[] = { RuleNames.rule1, RuleNames.rule2,RuleNames.rule3};
+		rulesDropDown = new JComboBox<RuleNames>(rulesNames);
 		rulesDropDown.setMaximumRowCount(5);
 		rulesDropDown.setEditable(false);
 		rulesDropDown.addActionListener(this);
@@ -210,6 +212,10 @@ public class CALauncher extends CAApp {
 	}
 	
 	private void loadButtons() {
+		createButton = new JButton("Create");
+		createButton.setEnabled(true);
+		createButton.addActionListener(this);
+		
 		final JButton startBtn = new JButton("Start"); // start button declared final to control from action events
 		startBtn.setEnabled(true);
 		startBtn.addActionListener(this);
@@ -223,6 +229,8 @@ public class CALauncher extends CAApp {
 		rewindBtn.setEnabled(true);
 		rewindBtn.addActionListener(this);
 		sideMenuLayout.emptyRow();
+		sideMenuLayout.row().center().add(createButton);
+		sideMenuLayout.emptyRow();
 		sideMenuLayout.row().center().add(startBtn,pauseBtn);
 		sideMenuLayout.emptyRow();
 		sideMenuLayout.row().center().add(resetBtn,rewindBtn);
@@ -230,7 +238,7 @@ public class CALauncher extends CAApp {
 		
 	public void actionPerformed(ActionEvent ae) {
 
-		if ("Start".equals(ae.getActionCommand())) { // Create event handler
+		if ("Create".equals(ae.getActionCommand())) { // Create event handler
 
 			// Initialization
 
@@ -262,15 +270,14 @@ public class CALauncher extends CAApp {
 			caCrystalSet.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT - BUTTONS_HEIGHT));
 
 	
-			caCrystalSet.setBackground(Color.WHITE);
+			caCrystalSet.setBackground(Color.BLACK);
 			mainPanel.add(BorderLayout.CENTER, caCrystalSet);
 			frame.setVisible(true);
-			lblStatus.setText("Simulation Region Created successfully...");
+			//lblStatus.setText("Simulation Region Created successfully...");
 
 		} else if ("Start".equals(ae.getActionCommand())) { // Start button event
 
-			lblStatus.setText("Mobile Automata Started ... !!! ");
-			log.info("Starting the mobile simulation ... !!! ");
+			caCrystalSet.nextCrystal();
 
 		} else if ("Pause".equals(ae.getActionCommand())) { // Pause button event
 

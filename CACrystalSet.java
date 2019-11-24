@@ -1,12 +1,19 @@
 package edu.neu.csye6200.ca;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.io.File;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
 
 
 public class CACrystalSet extends JPanel implements Runnable {
@@ -91,18 +98,18 @@ public class CACrystalSet extends JPanel implements Runnable {
 					paused = true;
 
 				} else { // Forward simulation
-					nextCrystal = previousCrystal.createNextCrystal();
+					nextCrystal = previousCrystal.createNextCrystal(generationCount);
 					generationCount++;
 					addCrystalToMap(generationCount, nextCrystal); // Once done, the region is added to the MAP
 					previousCrystal = nextCrystal;
 					repaint(); // Paints the new state of the region using paintComponent.
 				}
 
-				CALauncher.genCount.setText(generationCount + "");
+			//	CALauncher.genCount.setText(generationCount + "");
 				simulationCheck(); // helper method to check if the simulation is completed
 
 				try {
-					Thread.sleep(this.sleepTime); // customized sleep time
+					Thread.sleep(this.sleepTime * 10); // customized sleep time
 				} catch (InterruptedException e) {
 					log.severe("The thread execution was interrupted. Details : " + e.toString());
 					break;
@@ -159,17 +166,13 @@ public class CACrystalSet extends JPanel implements Runnable {
 	private void simulationCheck() {
 
 		if (previousCrystal.getRuleName().compareTo(RuleNames.rule1) == 0) {
-			for (int col = 0; col < previousCrystal.getCrystalColumns(); col++) {
-				if (previousCrystal.getCellAt(previousCrystal.getCrystalRows() - 1, col).getCellState()
-						.compareTo(CACellState.FROZEN) == 0) {
+			
+				if (generationCount == genLimit) {
 					completeFlag = true;
-					break;
-				}
 			}
-			// Checking if the DEADALIVE simulation is done even before the Generation Count
-		} else if (previousCrystal.getRuleName().compareTo(RuleNames.rule2) == 0) {
+			
+		} 
 
-		}
 	}
 
 	// Start point for generating next Regions. Called by MAutomataDriver.
@@ -211,13 +214,41 @@ public class CACrystalSet extends JPanel implements Runnable {
 						} else {
 							g.setColor(Color.BLUE);
 						}
-						// Shape changes from rectangle to oval
-						g.fillOval(hoffset + col * squarewidth, voffset + row * squareheight, squarewidth - 1,
+						g.fillRect(hoffset + col * squarewidth, voffset + row * squareheight, squarewidth - 1,
 								squareheight - 1);
 					}
 
-				} // GOLDWINNER GRAPHICS Initial
-			} 
+				}
+			}
+		 else {
+			// BufferedImage myPicture = ImageIO.read(new File("1.png"));
+				for (int row = 0; row < previousCrystal.getCrystalRows(); row++) {
+					for (int col = 0; col < previousCrystal.getCrystalColumns(); col++) {
+						if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.FROZEN) {
+//							ImageObserver io = new ImageObserver() {
+//								
+//								@Override
+//								public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+//									// TODO Auto-generated method stub
+//									return false;
+//								}
+//							};
+//							g.drawImage(myPicture, row, col, io);
+							g.setColor(Color.GREEN);
+						} else if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.VAPOUR) {
+							g.setColor(Color.WHITE);
+						} else {
+							g.setColor(Color.WHITE);
+						}
+						boolean evenRow = ((row % 2) == 0);
+						int shift = evenRow ? 0 : squarewidth/2;
+						g.fillRect(hoffset + col * squarewidth, voffset + row * squareheight, squarewidth - 1,
+								squareheight - 1);
+
+					}
+
+				}
+			}
 		} catch (Exception e) {
 			log.severe("Whoa!! Some exception occurred while setting up graphics. Details : " + e.toString());
 		}
