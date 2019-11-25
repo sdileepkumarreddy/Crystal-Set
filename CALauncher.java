@@ -45,11 +45,11 @@ public class CALauncher extends CAApp {
 	protected static JComboBox<RuleNames> rulesDropDown = null;
 	protected static JComboBox<Integer> sleepTimeDropDown = null;
 	protected static JComboBox<Integer> generationsDropDown = null;
-	protected JButton startBtn = null;
-	protected JButton pauseBtn = null;
-	protected JButton resetBtn = null;
-	protected JButton rewindBtn = null;
-	protected JButton createButton = null;
+	protected static JButton startBtn = null;
+	protected static JButton pauseBtn = null;
+	protected static JButton resetBtn = null;
+	protected static JButton rewindBtn = null;
+	protected static JButton createButton = null;
 	protected static JLabel genCount = null;
 	protected static JLabel lblStatus = null;
 	private static final int FRAME_WIDTH = 1000;
@@ -196,13 +196,13 @@ public class CALauncher extends CAApp {
 		generations = new JLabel("Generations");
 		generations.setForeground(Color.WHITE);
 		sideMenuLayout.row().center().add(sleepTime,generations);
-		final Integer rows[] = { 40, 60, 80, 100, 120 };
+		final Integer rows[] = { 400, 600, 800, 1000, 1200 };
 		sleepTimeDropDown = new JComboBox<Integer>(rows);
 		sleepTimeDropDown.setMaximumRowCount(5);
 		sleepTimeDropDown.setEditable(false);
 		sleepTimeDropDown.addActionListener(this);
 
-		final Integer cols[] = { 40, 60, 80, 100, 120 };
+		final Integer cols[] = { 10, 20, 30, 40, 60};
 		generationsDropDown = new JComboBox<Integer>(cols);
 		generationsDropDown.setMaximumRowCount(5);
 		generationsDropDown.setEditable(false);
@@ -281,17 +281,31 @@ public class CALauncher extends CAApp {
 
 		} else if ("Pause".equals(ae.getActionCommand())) { // Pause button event
 
+			pauseBtn.setEnabled(false);
 
+			rewindBtn.setEnabled(true);
+			startBtn.setEnabled(true);
+			resetBtn.setEnabled(true);
+
+			// Inform the thread to pause the simulation
+			caCrystalSet.pauseThread();
 		} else if ("Rewind".equals(ae.getActionCommand())) {
 
+			rewindBtn.setEnabled(false);
+			startBtn.setEnabled(false);
+			pauseBtn.setEnabled(true);
+			resetBtn.setEnabled(true);
 
-		} else if ("Stop".equals(ae.getActionCommand())) { // Stop button event
-			lblStatus.setText("Simulation stopped . Thank you for using Mobile Automata ... !!");
-			log.info("Simulation stopped . Thank you for using Mobile Automata ... !!");
+			// Inform the thread to rewind the simulation
+			caCrystalSet.rewindCrystal();
 
-			genCount.setText("0");
+		} else if ("Reset".equals(ae.getActionCommand())) { // Stop button event
+
 			caCrystalSet.stopThread();
 			caCrystalSet.setVisible(false);
+			for (Component component : sideMenuPanel.getComponents()) {
+				component.setEnabled(true);
+			}
 		}
 
 	}

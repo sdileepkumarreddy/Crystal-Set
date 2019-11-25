@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -14,6 +15,8 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import edu.neu.csye6200.ca.HexagonCell.Hexagon;
+
 
 
 public class CACrystalSet extends JPanel implements Runnable {
@@ -21,7 +24,8 @@ public class CACrystalSet extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private Map<Integer, CACrystal> caCrystalRecord; // To store all the Regions. Will be helpful in retrieving data back
 	private int generationCount; // To keep track of region generations.
-
+	 public static final int S = 50;
+	    public static final int A = (int) (Math.sqrt(3)*(S/2));
 	/*
 	 * User defined limit until which the Regions are generated and stored in the
 	 * MAP and simulation stops when the limit is reached
@@ -109,7 +113,7 @@ public class CACrystalSet extends JPanel implements Runnable {
 				simulationCheck(); // helper method to check if the simulation is completed
 
 				try {
-					Thread.sleep(this.sleepTime * 10); // customized sleep time
+					Thread.sleep(this.sleepTime); // customized sleep time
 				} catch (InterruptedException e) {
 					log.severe("The thread execution was interrupted. Details : " + e.toString());
 					break;
@@ -120,40 +124,29 @@ public class CACrystalSet extends JPanel implements Runnable {
 				stopped = false;
 			} else if (generationCount < genLimit && paused) {
 				if (rewind && generationCount == 0) {
-//					rewind = false;
-//					CALauncher.lblStatus.setText("Simulation paused as user went back to the initial state...");
-//					log.info("Simulation paused as user went back to the initial state...");
-//					CALauncher.pauseButton.setEnabled(false);
-//					CALauncher.startButton.setEnabled(true);
+					rewind = false;
+					log.info("Simulation paused as user went back to the initial state...");
+					CALauncher.pauseBtn.setEnabled(true);
+					CALauncher.startBtn.setEnabled(true);
 
 				} else if (rewind) {
-//					CALauncher.lblStatus.setText("Simulation paused while user was rewinding...");
-//					log.info("Simulation paused while user was rewinding...");
-//					CALauncher.startButton.setEnabled(true);
-//					CALauncher.rewindButton.setEnabled(true);
+					log.info("Simulation paused while user was rewinding...");
+					CALauncher.startBtn.setEnabled(true);
+					CALauncher.rewindBtn.setEnabled(true);
 				} else {
 //					MAutomataDriver.lblStatus.setText("Simulation Paused...");
 //					log.info("Simulation Paused...");
 				}
 
 			} else if (completeFlag) {
-
-//				if (previousCrystal.isLocked()) {
-//					CALauncher.lblStatus.setText("OOPS!! You are locked... Simulation completed Successfully...");
-//					log.info("OOPS!! You are locked... Simulation completed Successfully...");
-//				} else {
-//					CALauncher.lblStatus.setText("Simulation completed Successfully...");
-//					log.info("Simulation completed Successfully...");
-//				}
-//				CALauncher.pauseButton.setEnabled(false);
-//				CALauncher.startButton.setEnabled(false);
+			
+				CALauncher.pauseBtn.setEnabled(false);
+				CALauncher.startBtn.setEnabled(false);
 
 			} else if (generationCount == genLimit) {
-//				CALauncher.lblStatus.setText("Simulation reached maximum generation Limit...");
-//				log.info("Simulation reached maximum generation Limit...");
-//
-//				CALauncher.pauseButton.setEnabled(false);
-//				CALauncher.startButton.setEnabled(false);
+
+				CALauncher.pauseBtn.setEnabled(false);
+				CALauncher.startBtn.setEnabled(false);
 			}
 		} catch (Exception e) {
 			log.severe("OOPS!! Some issue occured while simulation was in progress. Details : " + e.toString());
@@ -221,35 +214,36 @@ public class CACrystalSet extends JPanel implements Runnable {
 				}
 			}
 		 else {
-			// BufferedImage myPicture = ImageIO.read(new File("1.png"));
-				for (int row = 0; row < previousCrystal.getCrystalRows(); row++) {
-					for (int col = 0; col < previousCrystal.getCrystalColumns(); col++) {
-						if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.FROZEN) {
-//							ImageObserver io = new ImageObserver() {
-//								
-//								@Override
-//								public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-//									// TODO Auto-generated method stub
-//									return false;
-//								}
-//							};
-//							g.drawImage(myPicture, row, col, io);
+			 	final int[] xs = new int[6];
+	            final int[] ys = new int[6];
+		        final Hexagon[][] grid = new Hexagon[previousCrystal.getCrystalRows()][ previousCrystal.getCrystalColumns()];
+		        for(int row = 0; row < previousCrystal.getCrystalRows(); row++) {
+		            for(int col = 0; col < previousCrystal.getCrystalColumns(); col++) {
+		                grid[row][col] = new Hexagon(row, col, previousCrystal.getCrystalRows()/5);
+		                final int[] i = {0};
+		                grid[row][col].foreachVertex((x, y) -> {
+		                  xs[i[0]] = (int)((double)x);
+		                  ys[i[0]] = (int)((double)y);
+		                  i[0]++;
+		                });
+		               
+		                if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.FROZEN) {
+
 							g.setColor(Color.GREEN);
+							g.fillPolygon(xs, ys, 6);
 						} else if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.VAPOUR) {
-							g.setColor(Color.WHITE);
+							g.setColor(Color.BLACK);
+							g.drawPolygon(xs, ys, 6);
 						} else {
-							g.setColor(Color.WHITE);
+							g.setColor(Color.BLACK);
+							g.drawPolygon(xs, ys, 6);
 						}
-						boolean evenRow = ((row % 2) == 0);
-						int shift = evenRow ? 0 : squarewidth/2;
-						g.fillRect(hoffset + col * squarewidth, voffset + row * squareheight, squarewidth - 1,
-								squareheight - 1);
 
-					}
+		            }
+		        }
+		 }}
 
-				}
-			}
-		} catch (Exception e) {
+		catch (Exception e) {
 			log.severe("Whoa!! Some exception occurred while setting up graphics. Details : " + e.toString());
 		}
 

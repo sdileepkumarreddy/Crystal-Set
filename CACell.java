@@ -9,13 +9,13 @@ enum CACellState {
 }
 
 public abstract class CACell {
-	
-	
+
+
 
 	public CACell() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	private CACellState cellState; 
 	protected CACrystal crystal; 
 	private int cellXPos; 
@@ -35,10 +35,7 @@ public abstract class CACell {
 			else
 				this.cellState = cellState;
 		} else {
-			if (cellCount == crystal.getInitialAliveCell() || cellCount == crystal.getInitialAliveCell() - 1)
-				this.cellState = CACellState.FROZEN;
-			else
-				this.cellState = cellState;
+			this.cellState = cellState;
 		}
 		cellCount++;
 
@@ -115,8 +112,8 @@ public abstract class CACell {
 		return desiredNeighbors;
 	}
 
-	
-	
+
+
 	// Getters and Setters
 
 	/**

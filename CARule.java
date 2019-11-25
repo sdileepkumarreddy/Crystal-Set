@@ -25,7 +25,10 @@ public class CARule extends CACell {
 
 		if (ruleName.equals(RuleNames.rule1)) {
 			return getRule1State();
-		} else {
+		} 
+		if (ruleName.equals(RuleNames.rule2)) {
+			return getRule2State();
+		}else {
 			return getCellState();
 		}
 
@@ -42,6 +45,15 @@ public class CARule extends CACell {
 		}
 		return getCellState();
 	}
+	
+	private CACellState getRule2State() {
+		if (getNeighborsCount(CACellState.FROZEN) == 1 || this.getCellState() == CACellState.FROZEN) {
+			return CACellState.FROZEN;
+		}
+		return CACellState.VAPOUR;
+
+	}
+
 
 	
 	
