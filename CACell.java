@@ -69,9 +69,21 @@ public abstract class CACell {
 
 		int desiredNeighbors = 0;
 		try {
+			int xPos = this.getCellXPos();
+			int z,a;
 
 			for (int i = -1; i < 2; i++) {
-				for (int j = -1; j < 2; j++) {
+				if(i == 0 )
+				{
+					z = -1;
+					a = 3;
+				}
+				else
+				{
+					z = xPos %2 == 0? -1 : 0;
+					a = 2;
+				}
+				for (int j = z; j < z+a; j++) {
 					if (this.getCellXPos() + i >= 0 && this.getCellXPos() + i < getCrystal().getCrystalRows()
 							&& this.getCellYPos() + j >= 0 && this.getCellYPos() + j < getCrystal().getCrystalColumns()) {
 						if (getCrystal().getCellAt(this.getCellXPos() + i, this.getCellYPos() + j).getCellState()

@@ -87,7 +87,43 @@ public class CACrystal {
 			}
 		}
 			else{
-				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2] = caFrozen;
+			this.arrCells[getCrystalRows()/2][getCrystalColumns()/2] = caFrozen;
+//				for(int i = (x-1); i <= (x+ 1);i++) {
+//
+//					for(int j = (y-2);j <= (y+ 2);j++) {
+//
+//						if(i % 2 == 0 && (j >= x-innerRowCount-1 && j <= x+innerRowCount+1))
+//						{
+//							this.arrCells[i][j] = caFrozen;
+//						}
+//
+//						else if(i % 2 == 1 && (j >= x-innerRowCount-1 && j <= x+innerRowCount)) {
+//							this.arrCells[i][j] = caFrozen;
+//						}
+//
+//						else
+//						{
+//							this.arrCells[i][j] = caVapour;
+//						}
+//					}
+//
+//					if(i%2 == 0 && i < x)
+//					{
+//						innerRowCount++;
+//					}
+//					if(i%2 == 1 && i > x)
+//					{
+//						innerRowCount--;
+//					}
+//
+//				}
+//				this.arrCells[x-2][y] = caFrozen;
+//				this.arrCells[x+2][y] = caFrozen;
+//				this.arrCells[x-1][y-2] = caFrozen;
+//				this.arrCells[x-1][y+1] = caFrozen;
+//				this.arrCells[x+1][y-2] = caFrozen;
+//				this.arrCells[x+1][y+1] = caFrozen;
+				
 			}
 		
 		

@@ -214,6 +214,7 @@ public class CACrystalSet extends JPanel implements Runnable {
 				}
 			}
 		 else {
+			 
 			 	final int[] xs = new int[6];
 	            final int[] ys = new int[6];
 		        final Hexagon[][] grid = new Hexagon[previousCrystal.getCrystalRows()][ previousCrystal.getCrystalColumns()];
@@ -234,9 +235,11 @@ public class CACrystalSet extends JPanel implements Runnable {
 						} else if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.VAPOUR) {
 							g.setColor(Color.BLACK);
 							g.drawPolygon(xs, ys, 6);
+//							 
 						} else {
 							g.setColor(Color.BLACK);
 							g.drawPolygon(xs, ys, 6);
+							
 						}
 
 		            }
