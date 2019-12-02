@@ -39,9 +39,9 @@ public class CACrystal {
 			for (int y = 0; y < crystalColumns; y++) {
 				CACell ca = new CARule(this.ruleName, this, CACellState.VAPOUR); // Based on the rule name the cells are
 				// initialized
-				ca.setCellXPos(x);
-				ca.setCellYPos(y);
-				ca.setRegion(this);
+				ca.setCellRowPos(x);
+				ca.setCellColPos(y);
+				ca.setCrystal(this);
 				this.arrCells[x][y] = ca;
 
 			}
@@ -51,79 +51,42 @@ public class CACrystal {
 
 	private void createInitialCrystal() {
 		CACell caFrozen = new CARule(this.ruleName, this, CACellState.FROZEN);
+		CACell caLiquid = new CARule(this.ruleName, this, CACellState.LIQUID);
 		CACell caVapour = new CARule(this.ruleName, this, CACellState.VAPOUR);
 		int x = getCrystalRows()/2;
 		int y = getCrystalColumns()/2;
 		int innerRowCount = 0;
 		if(this.ruleName == RuleNames.rule1) {
-			for(int i = (x-1); i <= (x+ 1);i++) {
-
-				for(int j = (y-2);j <= (y+ 2);j++) {
-
-					if(i % 2 == 0 && (j >= x-innerRowCount-1 && j <= x+innerRowCount+1))
-					{
-						this.arrCells[i][j] = caFrozen;
-					}
-
-					else if(i % 2 == 1 && (j >= x-innerRowCount-1 && j <= x+innerRowCount)) {
-						this.arrCells[i][j] = caFrozen;
-					}
-
-					else
-					{
-						this.arrCells[i][j] = caVapour;
-					}
-				}
-
-				if(i%2 == 0 && i < x)
-				{
-					innerRowCount++;
-				}
-				if(i%2 == 1 && i > x)
-				{
-					innerRowCount--;
-				}
-
-			}
+			this.arrCells[x][y] = caLiquid;
+			this.arrCells[x-2][y] = caFrozen;
+			this.arrCells[x+2][y] = caFrozen;
+			this.arrCells[x-1][y-2] = caFrozen;
+			this.arrCells[x-1][y+1] = caFrozen;
+			this.arrCells[x+1][y-2] = caFrozen;
+			this.arrCells[x+1][y+1] = caFrozen;
+			
 		}
-			else{
-			this.arrCells[getCrystalRows()/2][getCrystalColumns()/2] = caFrozen;
-//				for(int i = (x-1); i <= (x+ 1);i++) {
-//
-//					for(int j = (y-2);j <= (y+ 2);j++) {
-//
-//						if(i % 2 == 0 && (j >= x-innerRowCount-1 && j <= x+innerRowCount+1))
-//						{
-//							this.arrCells[i][j] = caFrozen;
-//						}
-//
-//						else if(i % 2 == 1 && (j >= x-innerRowCount-1 && j <= x+innerRowCount)) {
-//							this.arrCells[i][j] = caFrozen;
-//						}
-//
-//						else
-//						{
-//							this.arrCells[i][j] = caVapour;
-//						}
-//					}
-//
-//					if(i%2 == 0 && i < x)
-//					{
-//						innerRowCount++;
-//					}
-//					if(i%2 == 1 && i > x)
-//					{
-//						innerRowCount--;
-//					}
-//
-//				}
-//				this.arrCells[x-2][y] = caFrozen;
-//				this.arrCells[x+2][y] = caFrozen;
-//				this.arrCells[x-1][y-2] = caFrozen;
-//				this.arrCells[x-1][y+1] = caFrozen;
-//				this.arrCells[x+1][y-2] = caFrozen;
-//				this.arrCells[x+1][y+1] = caFrozen;
-				
+			else if(this.ruleName == RuleNames.rule2){
+			this.arrCells[getCrystalRows()/2][getCrystalColumns()/2] = caFrozen;	
+			}
+			else if(this.ruleName == RuleNames.rule3){
+				this.arrCells[getCrystalRows() / 2][getCrystalColumns() / 2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 - 2][getCrystalColumns()/2 - 2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 - 2][getCrystalColumns()/2 + 2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2 - 2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2 + 2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 -4 ][getCrystalColumns()/2 - 4] = caFrozen;
+				this.arrCells[getCrystalRows()/2 - 4 ][getCrystalColumns()/2 + 4] = caFrozen;
+				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2 + 4] = caFrozen;
+				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2 - 4] = caFrozen;
+				this.arrCells[getCrystalRows()/2 -4 ][getCrystalColumns()/2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 - 2 ][getCrystalColumns()/2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 2] = caFrozen;
+				this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 4] = caFrozen;
+				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 -2 ] = caFrozen;
+				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 - 4] = caFrozen;
 			}
 		
 		
@@ -158,6 +121,15 @@ public class CACrystal {
 					}
 				}
 			}
+			if (newCrystal.ruleName.compareTo(RuleNames.rule3) == 0) {
+
+				newCellStates = nextCellStates(counter);
+				for (int i = 0; i < getCrystalRows(); i++) {
+					for (int j = 0; j < getCrystalColumns(); j++) {
+						newCrystal.getCellAt(i, j).setState(newCellStates[i][j]);
+					}
+				}
+			}
 		} catch (Exception e) {
 			log.severe("Exception occured while creating next Region : " + e.toString());
 
@@ -179,40 +151,15 @@ public class CACrystal {
 	public CACellState[][] nextCellStates(int counter) {
 
 		CACellState[][] nextStates = new CACellState[getCrystalRows()][getCrystalColumns()];
-		if(this.ruleName == RuleNames.rule1)
-		{
-			int x = getCrystalRows()/2;
-			int y = getCrystalColumns()/2;
-			int innerRowCount = 0;
-			for(int i = (x-counter); i <= (x+ counter);i++) {
 
-				for(int j = (y-counter);j <= (y+ counter);j++) {
-					if(i < x-counter + 2 || i > x+counter-2)
-						continue;
-					if(i % 2 == 0 && (j >= x-innerRowCount-1 && j <= x+innerRowCount+1))
-					{
-						nextStates[i][j] = CACellState.FROZEN;
-					}
-					else if(i % 2 == 1 && (j >= x-innerRowCount-1 && j <= x+innerRowCount)) {
-						nextStates[i][j] = CACellState.FROZEN;
-					}
+		if(this.ruleName == RuleNames.rule2){
 
-					else
-					{
-						nextStates[i][j] = CACellState.VAPOUR;
-					}
-				}
-				if(i%2 == 0 && i < x)
-				{
-					innerRowCount++;
-				}
-				if(i%2 == 1 && i > x)
-				{
-					innerRowCount--;				
-				}
+			for (int i = 0; i < getCrystalRows(); i++) {
+				for (int j = 0; j < getCrystalColumns(); j++) {
+					nextStates[i][j] = getCellAt(i, j).getNextCellState();
 
+				}
 			}
-
 			return nextStates;
 		}
 		else {

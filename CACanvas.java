@@ -76,7 +76,8 @@ public class CACanvas extends JPanel {
 	}
 	
 	/*
-	 * A convenience routine to set the color and paint a square
+	 * A convenience routine to
+	 *  set the color and paint a square
 	 * @param g2d the graphics context
 	 * @param x horizontal offset in pixels
 	 * @param y vertical offset in pixels

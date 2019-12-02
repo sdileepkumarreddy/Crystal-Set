@@ -5,9 +5,6 @@ import java.util.function.BiConsumer;
 
 public class HexagonCell extends Polygon {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public HexagonCell() {

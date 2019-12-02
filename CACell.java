@@ -1,6 +1,5 @@
 package edu.neu.csye6200.ca;
 
-import java.util.Random;
 import java.util.logging.Logger;
 
 
@@ -10,121 +9,66 @@ enum CACellState {
 
 public abstract class CACell {
 
-
-
-	public CACell() {
-		// TODO Auto-generated constructor stub
-	}
-
+	private int cellRowPos; 
+	private int cellColPos;
 	private CACellState cellState; 
-	protected CACrystal crystal; 
-	private int cellXPos; 
-	private int cellYPos; 
-	protected static int cellCount = 0;
+	protected CACrystal crystal;
+	private static Logger log = null;
 
-	private static Logger log = Logger.getLogger(CACell.class.getName());
+	//default constructor
+	public CACell() {
 
+	}
 
 	public CACell(CACrystal crystal, CACellState cellState) {
-
+		log = Logger.getLogger(CACell.class.getName());
 		this.crystal = crystal;
-
-		if (crystal.getRuleName().compareTo(RuleNames.rule1) == 0) {
-			if (cellCount == crystal.getInitialAliveCell())
-				this.cellState = CACellState.VAPOUR;
-			else
-				this.cellState = cellState;
-		} else {
-			this.cellState = cellState;
-		}
-		cellCount++;
-
+		this.cellState = cellState;
 	}
 
-	/*
-	 * Implementation is provided by extending class (MARule)
-	 */
+	// CA Rule will implement this abstract method
 	public abstract CACellState getNextCellState();
 
-	/*
-	 * Implementation is provided by extending class (MARule)
-	 */
-	//public abstract int[] getNextCellPos();
-
-	/*
-	 * Sets the cell's current state if the new state is different
-	 * from the current state.
-	 */
+	//setter method for setting the cell state
 	protected void setState(CACellState state) {
-		if (!cellState.equals(state))
-			cellState = state;
+		cellState = state;
 	}
 
-	/*
-	 * Function to calculate the number of neighbors with a particular state for the
-	 * current cell. State to look after is provided as Input.
-	 */
-
-	protected int getNeighborsCount(CACellState state) {
-
-		int desiredNeighbors = 0;
+	
+	protected int getDesiredNeighborsCount(CACellState desiredState) {
+		int desiredNeighborCount = 0;
+		
 		try {
-			int xPos = this.getCellXPos();
-			int z,a;
+			int colStartPos,ColEndPos;
 
-			for (int i = -1; i < 2; i++) {
-				if(i == 0 )
-				{
-					z = -1;
-					a = 3;
-				}
-				else
-				{
-					z = xPos %2 == 0? -1 : 0;
-					a = 2;
-				}
-				for (int j = z; j < z+a; j++) {
-					if (this.getCellXPos() + i >= 0 && this.getCellXPos() + i < getCrystal().getCrystalRows()
-							&& this.getCellYPos() + j >= 0 && this.getCellYPos() + j < getCrystal().getCrystalColumns()) {
-						if (getCrystal().getCellAt(this.getCellXPos() + i, this.getCellYPos() + j).getCellState()
-								.compareTo(state) == 0) {
-							if (!(i == 0 && j == 0)) // should not consider the current cell as neighbor
-								desiredNeighbors++;
-						}
-					}
+			for (int rowCounter = -1; rowCounter < 2; rowCounter++) {
+				colStartPos = rowCounter == 0 ? -1 : (cellRowPos %2 == 0? -1 : 0); // Neighbor Rows and columns position changes for hexagon for even and odd rows
+				ColEndPos = rowCounter == 0? 3 : 2;
+				for (int colCounter = colStartPos; colCounter < colStartPos+ColEndPos; colCounter++) {
+					if(isDesiredNeighbour(rowCounter,colCounter,desiredState))
+						desiredNeighborCount++;
 				}
 			}
 
 		} catch (Exception e) {
 			log.severe("Exception occured while getting Neighbor Count : " + e.toString());
-			desiredNeighbors = 0;
+			desiredNeighborCount = 0;
 		}
-		return desiredNeighbors;
+		return desiredNeighborCount;
 	}
 
-	protected int getTDNeighborsCount(CACellState state) {
-
-		int desiredNeighbors = 0;
-		try {
-			for (int j = -1; j < 2; j++) {
-				if (this.getCellXPos() - 1 >= 0 && this.getCellXPos() - 1 < getCrystal().getCrystalRows()
-						&& this.getCellYPos() + j >= 0 && this.getCellYPos() + j < getCrystal().getCrystalColumns()) {
-					if (getCrystal().getCellAt(this.getCellXPos() - 1, this.getCellYPos() + j).getCellState()
-							.compareTo(state) == 0) {
-						if (j != 0)
-							desiredNeighbors++;
-					}
-				}
+	private boolean isDesiredNeighbour(int rowCounter,int colCounter,CACellState desiredState)
+	{
+		if (cellRowPos + rowCounter >= 0 && cellRowPos + rowCounter < getCrystal().getCrystalRows()
+				&& cellColPos + colCounter >= 0 && cellColPos + colCounter < getCrystal().getCrystalColumns()) {
+			if (getCrystal().getCellAt(cellRowPos + rowCounter, cellColPos + colCounter).getCellState()
+					.compareTo(desiredState) == 0) {
+				if (!(rowCounter == 0 && colCounter == 0)) // should not consider the current cell as neighbor
+					return true;
 			}
-
-		} catch (Exception e) {
-			log.severe("Exception occured while getting Neighbor Count : " + e.toString());
-			desiredNeighbors = 0;
 		}
-		return desiredNeighbors;
+		return false;
 	}
-
-
 
 	// Getters and Setters
 
@@ -152,36 +96,36 @@ public abstract class CACell {
 	/**
 	 * @param region the region to set
 	 */
-	public void setRegion(CACrystal crystal) {
+	public void setCrystal(CACrystal crystal) {
 		this.crystal = crystal;
 	}
 
 	/**
 	 * @return the cellXPos
 	 */
-	public int getCellXPos() {
-		return cellXPos;
+	public int getCellRowPos() {
+		return cellRowPos;
 	}
 
 	/**
 	 * @param cellXPos the cellXPos to set
 	 */
-	public void setCellXPos(int cellXPos) {
-		this.cellXPos = cellXPos;
+	public void setCellRowPos(int cellRowPos) {
+		this.cellRowPos = cellRowPos;
 	}
 
 	/**
 	 * @return the cellYPos
 	 */
-	public int getCellYPos() {
-		return cellYPos;
+	public int getCellColPos() {
+		return cellColPos;
 	}
 
 	/**
 	 * @param cellYPos the cellYPos to set
 	 */
-	public void setCellYPos(int cellYPos) {
-		this.cellYPos = cellYPos;
+	public void setCellColPos(int cellColPos) {
+		this.cellColPos = cellColPos;
 	}
 
 }

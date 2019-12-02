@@ -15,8 +15,11 @@ public class CARule extends CACell {
 
 	private static Logger log = Logger.getLogger(CACell.class.getName());
 
+	public CARule() {
+
+	}
 	public CARule(RuleNames ruleName, CACrystal crystal, CACellState initCellState) {
-		super(crystal, initCellState); // call to MACell
+		super(crystal, initCellState);
 		this.ruleName = ruleName;
 	}
 
@@ -25,29 +28,41 @@ public class CARule extends CACell {
 
 		if (ruleName.equals(RuleNames.rule1)) {
 			return getRule1State();
-		} 
+		}
+		
 		if (ruleName.equals(RuleNames.rule2)) {
 			return getRule2State();
-		}else {
+		}
+		if (ruleName.equals(RuleNames.rule3)) {
+			return getRule3State();
+		}
+		else {
 			return getCellState();
 		}
 
 	}
-	public CARule() {
-		
-	}
-	
+
+
 	private CACellState getRule1State() {
-		if (getTDNeighborsCount(CACellState.FROZEN) == 2) {
-			return CACellState.LIQUID;
-		} else if (getTDNeighborsCount(CACellState.FROZEN) == 1) {
+		if (getDesiredNeighborsCount(CACellState.FROZEN) ==1 || this.getCellState() == CACellState.FROZEN) {
 			return CACellState.FROZEN;
 		}
-		return getCellState();
+		if (getDesiredNeighborsCount(CACellState.LIQUID) == 1 || this.getCellState() == CACellState.LIQUID) {
+			return CACellState.LIQUID;
+		}
+		return CACellState.VAPOUR;
+
 	}
 	
 	private CACellState getRule2State() {
-		if (getNeighborsCount(CACellState.FROZEN) == 1 || this.getCellState() == CACellState.FROZEN) {
+		if (getDesiredNeighborsCount(CACellState.FROZEN) == 1 || this.getCellState() == CACellState.FROZEN) {
+			return CACellState.FROZEN;
+		}
+		return CACellState.VAPOUR;
+
+	}
+	private CACellState getRule3State() {
+		if (getDesiredNeighborsCount(CACellState.FROZEN) ==1 || this.getCellState() == CACellState.FROZEN) {
 			return CACellState.FROZEN;
 		}
 		return CACellState.VAPOUR;
@@ -55,6 +70,6 @@ public class CARule extends CACell {
 	}
 
 
-	
-	
+
+
 }

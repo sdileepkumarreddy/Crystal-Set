@@ -142,6 +142,7 @@ public class CACrystalSet extends JPanel implements Runnable {
 			
 				CALauncher.pauseBtn.setEnabled(false);
 				CALauncher.startBtn.setEnabled(false);
+				CALauncher.rewindBtn.setEnabled(false);
 
 			} else if (generationCount == genLimit) {
 
@@ -188,39 +189,13 @@ public class CACrystalSet extends JPanel implements Runnable {
 	public void paintComponent(Graphics g) {
 
 		try {
-			// helper methods to calculate the rectangle size in the panel.
-			int squarewidth = getSquareWidth();
-			int squareheight = getSquareHeight();
 
-			// helper methods to get the co-ordinates of the cell to fill them.
-			int hoffset = getHorizontalOffset();
-			int voffset = getVerticalOffset();
-
-		 if (completeFlag && previousCrystal.getRuleName().compareTo(RuleNames.rule1) == 0) {
-				for (int row = 0; row < previousCrystal.getCrystalRows(); row++) {
-					for (int col = 0; col < previousCrystal.getCrystalColumns(); col++) {
-						if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.FROZEN) {
-							g.setColor(Color.BLACK);
-						} else if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.VAPOUR) {
-							Color newColor = new Color(255, 215, 0); // For Gold Color
-							g.setColor(newColor);
-						} else {
-							g.setColor(Color.BLUE);
-						}
-						g.fillRect(hoffset + col * squarewidth, voffset + row * squareheight, squarewidth - 1,
-								squareheight - 1);
-					}
-
-				}
-			}
-		 else {
-			 
 			 	final int[] xs = new int[6];
 	            final int[] ys = new int[6];
 		        final Hexagon[][] grid = new Hexagon[previousCrystal.getCrystalRows()][ previousCrystal.getCrystalColumns()];
 		        for(int row = 0; row < previousCrystal.getCrystalRows(); row++) {
 		            for(int col = 0; col < previousCrystal.getCrystalColumns(); col++) {
-		                grid[row][col] = new Hexagon(row, col, previousCrystal.getCrystalRows()/5);
+		                grid[row][col] = new Hexagon(row, col, 5);
 		                final int[] i = {0};
 		                grid[row][col].foreachVertex((x, y) -> {
 		                  xs[i[0]] = (int)((double)x);
@@ -230,21 +205,20 @@ public class CACrystalSet extends JPanel implements Runnable {
 		               
 		                if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.FROZEN) {
 
-							g.setColor(Color.GREEN);
+							g.setColor(Color.blue.darker());
 							g.fillPolygon(xs, ys, 6);
 						} else if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.VAPOUR) {
-							g.setColor(Color.BLACK);
-							g.drawPolygon(xs, ys, 6);
-//							 
+							g.setColor(Color.green);
+							g.drawPolygon(xs, ys, 6);						 
 						} else {
-							g.setColor(Color.BLACK);
-							g.drawPolygon(xs, ys, 6);
+							g.setColor(Color.blue.brighter());
+							g.fillPolygon(xs, ys, 6);
 							
 						}
 
 		            }
 		        }
-		 }}
+		 }
 
 		catch (Exception e) {
 			log.severe("Whoa!! Some exception occurred while setting up graphics. Details : " + e.toString());
