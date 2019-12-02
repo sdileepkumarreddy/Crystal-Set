@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 
 enum RuleNames {
-	rule1, rule2, rule3
+	SingleSnowflake, RandomSnowFlakes, rule3
 }
 
 public class CARule extends CACell {
@@ -26,11 +26,11 @@ public class CARule extends CACell {
 	@Override
 	public CACellState getNextCellState() {
 
-		if (ruleName.equals(RuleNames.rule1)) {
+		if (ruleName.equals(RuleNames.SingleSnowflake)) {
 			return getRule1State();
 		}
 		
-		if (ruleName.equals(RuleNames.rule2)) {
+		if (ruleName.equals(RuleNames.RandomSnowFlakes)) {
 			return getRule2State();
 		}
 		if (ruleName.equals(RuleNames.rule3)) {
@@ -61,8 +61,18 @@ public class CARule extends CACell {
 		return CACellState.VAPOUR;
 
 	}
+	
 	private CACellState getRule3State() {
-		if (getDesiredNeighborsCount(CACellState.FROZEN) ==1 || this.getCellState() == CACellState.FROZEN) {
+		if (getDesiredNeighborsCount(CACellState.FROZEN) >1 && this.getCellState() == CACellState.VAPOUR) {
+			return CACellState.FROZEN;
+		}
+		if (getDesiredNeighborsCount(CACellState.FROZEN)  == 1 && this.getCellState() == CACellState.VAPOUR) {
+			return CACellState.LIQUID;
+		}
+		if (getDesiredNeighborsCount(CACellState.LIQUID) > 1 ) {
+			return CACellState.FROZEN;
+		}
+		if (getDesiredNeighborsCount(CACellState.VAPOUR) > 3 && this.getCellState() == CACellState.LIQUID) {
 			return CACellState.FROZEN;
 		}
 		return CACellState.VAPOUR;

@@ -24,7 +24,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.Border;
-
 import net.java.dev.designgridlayout.*;
 
 
@@ -58,6 +57,7 @@ public class CALauncher extends CAApp {
 	protected static JLabel lblStatus = null;
 	protected static JRadioButton lightMode,darkMode,grid,noGrid;
 	protected static boolean isLightMode = true;
+	protected static boolean isGridMode = true;
 	private static final int FRAME_WIDTH = 1000;
 	private static final int FRAME_HEIGHT = 600;
 	private static final int BUTTONS_HEIGHT = 80;
@@ -177,7 +177,7 @@ public class CALauncher extends CAApp {
 		rulesDescription = new JLabel("Rules Description");
 		rulesDescription.setForeground(Color.BLACK);
 		sideMenuLayout.row().center().add(rulesLabel,rulesDescription);
-		final RuleNames rulesNames[] = { RuleNames.rule1, RuleNames.rule2,RuleNames.rule3};
+		final RuleNames rulesNames[] = { RuleNames.SingleSnowflake, RuleNames.RandomSnowFlakes,RuleNames.rule3};
 		rulesDropDown = new JComboBox<RuleNames>(rulesNames);
 		rulesDropDown.setMaximumRowCount(3);
 		rulesDropDown.setEditable(false);
@@ -302,7 +302,7 @@ public class CALauncher extends CAApp {
 			int middleCell = Math.round((rows * cols) / 2);
 			int initAliveCell = middleCell - Math.round(cols / 2);
 
-			if (rule.compareTo(RuleNames.rule1) == 0) {
+			if (rule.compareTo(RuleNames.SingleSnowflake) == 0) {
 				initAliveCell = Math.round(cols / 2);
 			}
 			//mainPanel.setBackground(Color.white);
@@ -322,6 +322,10 @@ public class CALauncher extends CAApp {
 			generationsDropDown.setEnabled(false);
 			sleepTimeDropDown.setEnabled(false);
 			rulesDropDown.setEnabled(false);
+			lightMode.setEnabled(false);
+			darkMode.setEnabled(false);
+			grid.setEnabled(false);
+			noGrid.setEnabled(false);
 			mainPanel.setBackground(isLightMode? Color.white : Color.black);
 			mainPanel.add(BorderLayout.CENTER, caCrystalSet);
 			frame.setVisible(true);
@@ -361,8 +365,13 @@ public class CALauncher extends CAApp {
 			generationsDropDown.setEnabled(true);
 			sleepTimeDropDown.setEnabled(true);
 			rulesDropDown.setEnabled(true);
+			grid.setEnabled(true);
+			noGrid.setEnabled(true);
+			lightMode.setEnabled(true);
+			darkMode.setEnabled(true);
 		}
 		else if ("Light Mode".equals(ae.getActionCommand())) { // Stop button event
+			isLightMode = true;
 			mainPanel.setBackground(Color.white);
 			sideMenuPanel.setBackground(Color.white);
 			bottomStatusDisplayPanel.setBackground(Color.white);
@@ -375,6 +384,7 @@ public class CALauncher extends CAApp {
 			frame.setVisible(true);
 		}
 		else if ("Dark Mode".equals(ae.getActionCommand())) { // Stop button event
+			isLightMode = false;
 			mainPanel.setBackground(Color.black);
 			sideMenuPanel.setBackground(Color.black);
 			bottomStatusDisplayPanel.setBackground(Color.black);
@@ -386,7 +396,20 @@ public class CALauncher extends CAApp {
 			generations.setForeground(Color.white);
 			frame.setVisible(true);
 		}
+		else if ("View".equals(ae.getActionCommand())) {			
+			viewDescription();
+		}
+		else if ("Grid".equals(ae.getActionCommand())) {			
+			isGridMode = true;
+		}
+		else if ("No Grid".equals(ae.getActionCommand())) {			
+			isGridMode = false;
+		}
 
+	}
+	
+	private void viewDescription() {
+		CARuleDescription instance = CARuleDescription.getInstance();
 	}
 	
 	private void sidePanelEmptySpaceBetweenRows(int count)

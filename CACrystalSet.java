@@ -24,8 +24,8 @@ public class CACrystalSet extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private Map<Integer, CACrystal> caCrystalRecord; // To store all the Regions. Will be helpful in retrieving data back
 	private int generationCount; // To keep track of region generations.
-	 public static final int S = 50;
-	    public static final int A = (int) (Math.sqrt(3)*(S/2));
+	public static final int S = 50;
+	public static final int A = (int) (Math.sqrt(3)*(S/2));
 	/*
 	 * User defined limit until which the Regions are generated and stored in the
 	 * MAP and simulation stops when the limit is reached
@@ -109,7 +109,7 @@ public class CACrystalSet extends JPanel implements Runnable {
 					repaint(); // Paints the new state of the region using paintComponent.
 				}
 
-			//	CALauncher.genCount.setText(generationCount + "");
+				//	CALauncher.genCount.setText(generationCount + "");
 				simulationCheck(); // helper method to check if the simulation is completed
 
 				try {
@@ -126,7 +126,7 @@ public class CACrystalSet extends JPanel implements Runnable {
 				if (rewind && generationCount == 0) {
 					rewind = false;
 					log.info("Simulation paused as user went back to the initial state...");
-					CALauncher.pauseBtn.setEnabled(true);
+					CALauncher.pauseBtn.setEnabled(false);
 					CALauncher.startBtn.setEnabled(true);
 
 				} else if (rewind) {
@@ -134,12 +134,12 @@ public class CACrystalSet extends JPanel implements Runnable {
 					CALauncher.startBtn.setEnabled(true);
 					CALauncher.rewindBtn.setEnabled(true);
 				} else {
-//					MAutomataDriver.lblStatus.setText("Simulation Paused...");
-//					log.info("Simulation Paused...");
+					//					MAutomataDriver.lblStatus.setText("Simulation Paused...");
+					//					log.info("Simulation Paused...");
 				}
 
 			} else if (completeFlag) {
-			
+
 				CALauncher.pauseBtn.setEnabled(false);
 				CALauncher.startBtn.setEnabled(false);
 				CALauncher.rewindBtn.setEnabled(false);
@@ -159,13 +159,9 @@ public class CACrystalSet extends JPanel implements Runnable {
 	// Limit.
 	private void simulationCheck() {
 
-		if (previousCrystal.getRuleName().compareTo(RuleNames.rule1) == 0) {
-			
-				if (generationCount == genLimit) {
-					completeFlag = true;
-			}
-			
-		} 
+		if (generationCount == genLimit) {
+			completeFlag = true;
+		}
 
 	}
 
@@ -190,35 +186,42 @@ public class CACrystalSet extends JPanel implements Runnable {
 
 		try {
 
-			 	final int[] xs = new int[6];
-	            final int[] ys = new int[6];
-		        final Hexagon[][] grid = new Hexagon[previousCrystal.getCrystalRows()][ previousCrystal.getCrystalColumns()];
-		        for(int row = 0; row < previousCrystal.getCrystalRows(); row++) {
-		            for(int col = 0; col < previousCrystal.getCrystalColumns(); col++) {
-		                grid[row][col] = new Hexagon(row, col, 5);
-		                final int[] i = {0};
-		                grid[row][col].foreachVertex((x, y) -> {
-		                  xs[i[0]] = (int)((double)x);
-		                  ys[i[0]] = (int)((double)y);
-		                  i[0]++;
-		                });
-		               
-		                if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.FROZEN) {
+			final int[] xs = new int[6];
+			final int[] ys = new int[6];
+			final Hexagon[][] grid = new Hexagon[previousCrystal.getCrystalRows()][ previousCrystal.getCrystalColumns()];
+			for(int row = 0; row < previousCrystal.getCrystalRows(); row++) {
+				for(int col = 0; col < previousCrystal.getCrystalColumns(); col++) {
+					grid[row][col] = new Hexagon(row, col, 5);
+					final int[] i = {0};
+					grid[row][col].foreachVertex((x, y) -> {
+						xs[i[0]] = (int)((double)x);
+						ys[i[0]] = (int)((double)y);
+						i[0]++;
+					});
 
-							g.setColor(Color.blue.darker());
+					if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.FROZEN) {
+
+						g.setColor(Color.blue.brighter());
+						g.fillPolygon(xs, ys, 6);
+					} else if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.VAPOUR) {
+						if(CALauncher.isGridMode) {
+							g.setColor(CALauncher.isLightMode? Color.black : Color.white);
+							g.drawPolygon(xs, ys, 6);
+						}
+						else {
+							g.setColor(CALauncher.isLightMode? Color.white : Color.black);
 							g.fillPolygon(xs, ys, 6);
-						} else if (previousCrystal.getCellAt(row, col).getCellState() == CACellState.VAPOUR) {
-							g.setColor(Color.green);
-							g.drawPolygon(xs, ys, 6);						 
-						} else {
-							g.setColor(Color.blue.brighter());
-							g.fillPolygon(xs, ys, 6);
-							
 						}
 
-		            }
-		        }
-		 }
+					} else {
+						g.setColor(Color.green);
+						g.fillPolygon(xs, ys, 6);
+
+					}
+
+				}
+			}
+		}
 
 		catch (Exception e) {
 			log.severe("Whoa!! Some exception occurred while setting up graphics. Details : " + e.toString());
@@ -381,6 +384,12 @@ public class CACrystalSet extends JPanel implements Runnable {
 	 */
 	public void setRewind(boolean rewind) {
 		this.rewind = rewind;
+	}
+
+	private Color getGridColor() {
+		Color withGridcolor = CALauncher.isLightMode? Color.black : Color.white;
+		Color WithOutGridcolor = CALauncher.isLightMode? Color.white : Color.black ;
+		return CALauncher.isGridMode ? withGridcolor : WithOutGridcolor;
 	}
 
 }

@@ -1,5 +1,6 @@
 package edu.neu.csye6200.ca;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 
@@ -56,20 +57,26 @@ public class CACrystal {
 		int x = getCrystalRows()/2;
 		int y = getCrystalColumns()/2;
 		int innerRowCount = 0;
-		if(this.ruleName == RuleNames.rule1) {
-			this.arrCells[x][y] = caLiquid;
-			this.arrCells[x-2][y] = caFrozen;
-			this.arrCells[x+2][y] = caFrozen;
-			this.arrCells[x-1][y-2] = caFrozen;
-			this.arrCells[x-1][y+1] = caFrozen;
-			this.arrCells[x+1][y-2] = caFrozen;
-			this.arrCells[x+1][y+1] = caFrozen;
+		if(this.ruleName == RuleNames.SingleSnowflake) {
+			this.arrCells[x][y] = caFrozen;
+//			this.arrCells[x][y] = caLiquid;
+//			this.arrCells[x-2][y] = caFrozen;
+//			this.arrCells[x+2][y] = caFrozen;
+//			this.arrCells[x-1][y-2] = caFrozen;
+//			this.arrCells[x-1][y+1] = caFrozen;
+//			this.arrCells[x+1][y-2] = caFrozen;
+//			this.arrCells[x+1][y+1] = caFrozen;
 			
 		}
-			else if(this.ruleName == RuleNames.rule2){
-			this.arrCells[getCrystalRows()/2][getCrystalColumns()/2] = caFrozen;	
+			else if(this.ruleName == RuleNames.RandomSnowFlakes){
+				
+				for(int i = 0; i < 10; i++) {
+					Random rand = new Random();
+					this.arrCells[rand.nextInt(94)][rand.nextInt(125)] = caFrozen;
+				}
 			}
 			else if(this.ruleName == RuleNames.rule3){
+				
 				this.arrCells[getCrystalRows() / 2][getCrystalColumns() / 2] = caFrozen;
 				this.arrCells[getCrystalRows()/2 - 2][getCrystalColumns()/2 - 2] = caFrozen;
 				this.arrCells[getCrystalRows()/2 - 2][getCrystalColumns()/2 + 2] = caFrozen;
@@ -79,14 +86,14 @@ public class CACrystal {
 				this.arrCells[getCrystalRows()/2 - 4 ][getCrystalColumns()/2 + 4] = caFrozen;
 				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2 + 4] = caFrozen;
 				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2 - 4] = caFrozen;
-				this.arrCells[getCrystalRows()/2 -4 ][getCrystalColumns()/2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 - 2 ][getCrystalColumns()/2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 4] = caFrozen;
-				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 -2 ] = caFrozen;
-				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 - 4] = caFrozen;
+				this.arrCells[getCrystalRows()/2 -4 ][getCrystalColumns()/2] = caLiquid;
+				this.arrCells[getCrystalRows()/2 - 2 ][getCrystalColumns()/2] = caLiquid;
+				this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2] = caLiquid;
+				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2] = caLiquid;
+				this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 2] = caLiquid;
+				this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 4] = caLiquid;
+				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 -2 ] = caLiquid;
+				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 - 4] = caLiquid;
 			}
 		
 		
@@ -98,7 +105,7 @@ public class CACrystal {
 
 		try {
 
-			if (newCrystal.ruleName.compareTo(RuleNames.rule1) == 0) {
+			if (newCrystal.ruleName.compareTo(RuleNames.SingleSnowflake) == 0) {
 
 				newCellStates = nextCellStates(counter);
 
@@ -112,7 +119,7 @@ public class CACrystal {
 					}
 				}
 			}
-			if (newCrystal.ruleName.compareTo(RuleNames.rule2) == 0) {
+			if (newCrystal.ruleName.compareTo(RuleNames.RandomSnowFlakes) == 0) {
 
 				newCellStates = nextCellStates(counter);
 				for (int i = 0; i < getCrystalRows(); i++) {
@@ -152,7 +159,7 @@ public class CACrystal {
 
 		CACellState[][] nextStates = new CACellState[getCrystalRows()][getCrystalColumns()];
 
-		if(this.ruleName == RuleNames.rule2){
+		if(this.ruleName == RuleNames.RandomSnowFlakes){
 
 			for (int i = 0; i < getCrystalRows(); i++) {
 				for (int j = 0; j < getCrystalColumns(); j++) {
