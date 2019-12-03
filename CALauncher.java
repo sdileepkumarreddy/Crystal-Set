@@ -2,20 +2,13 @@ package edu.neu.csye6200.ca;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Image;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
-
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,113 +16,57 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.border.Border;
 import net.java.dev.designgridlayout.*;
 
-
+/*
+ * @author: Dileep Reddy 
+ * NUID: 001063317
+ * Class Description: CALauncher is the starting point to launch the application.
+ * 					  It extends from CAApp to demonstrate the property of abstract class
+ * 					  It also initializes all the UI components and other necessary UI parameters
+ * 					  After the frame is loaded with all UI components and its event listeners it then uses CACrystal 
+ * 					  and CACrystalSet to render Crystals and display in the UI
+ */
 
 public class CALauncher extends CAApp {
 
-	private CACrystalSet caCrystalSet;
-	private static Logger log;
+	// Initialize UI Components and other parameters
 	protected static JPanel mainPanel,sideMenuPanel,bottomStatusDisplayPanel,eastPanel;
-	private DesignGridLayout sideMenuLayout;
-
-	//Components
-	protected static JLabel title = null;
-	protected static JLabel noOfRows = null;
-	protected static JLabel noOfColumns = null;
-	protected static JLabel rulesLabel = null;
-	protected static JLabel sleepTime = null;
-	protected static JLabel generations = null;
-	protected static JLabel rulesDescription = null;
-	protected static JLabel statusText = null;
-	protected static JComboBox<RuleNames> rulesDropDown = null;
-	protected static JComboBox<Integer> sleepTimeDropDown = null;
-	protected static JComboBox<Integer> generationsDropDown = null;
-	protected static JButton startBtn = null;
-	protected static JButton pauseBtn = null;
-	protected static JButton resetBtn = null;
-	protected static JButton rewindBtn = null;
-	protected static JButton createButton = null;
-	protected static JButton viewRulesDescription = null;
-	protected static JLabel genCount = null;
-	protected static JLabel lblStatus = null;
+	protected static JLabel title,noOfRows,noOfColumns,rulesLabel,sleepTime,generations,rulesDescription,statusText,genCount,statusDisplayText;
+	protected static JComboBox<RuleNames> rulesDropDown;
+	protected static JComboBox<Integer> sleepTimeDropDown,generationsDropDown;
+	protected static JButton startBtn,pauseBtn,resetBtn,rewindBtn,createButton,viewRulesDescription;
 	protected static JRadioButton lightMode,darkMode,grid,noGrid;
 	protected static boolean isLightMode = true;
 	protected static boolean isGridMode = true;
 	private static final int FRAME_WIDTH = 1000;
 	private static final int FRAME_HEIGHT = 600;
-	private static final int BUTTONS_HEIGHT = 80;
+
+	private CACrystalSet caCrystalSet;
+	private static Logger log;
+	private DesignGridLayout sideMenuLayout;
 
 	public CALauncher() {
-		CustomLogger cl = new CustomLogger(CALauncher.class.getName());
+		CustomLogger cl = new CustomLogger(CALauncher.class.getName());  //Custom logger that returns logger along with file handler which is common for all classes
 		log = cl.getLoggerAndFileHandler();
-		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT); // initial Frame size
-		frame.setTitle("Crystal Automata");
+		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT); // Setting up frame size
+		frame.setTitle("Cellular Automata Crystal Growth");
 		frame.setVisible(true);
-		
-		lblStatus.setText("Cellular Automata Crystal growth has been launched!!");
+
+		statusDisplayText.setText("Cellular Automata Crystal Growth App has been launched!! Winter is here!!");
 	}
 
 	public static void main(String[] args) {
 		new CALauncher();
-		log.info("Crystal Automata Simulation has been launched");
+		log.info("Cellular Automata Crystal Growth App has been launched!!");
 
 	}
 
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-
+	//Implements getMainPanel() abstract method from CAApp and loads all the panels
 	@Override
 	public JPanel getMainPanel() {
-
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		/*
-		 * call to initialize and get the north Panel which contains all the user
-		 * interaction items
-		 */
 		mainPanel.setBackground(Color.white);
 		mainPanel.add(BorderLayout.WEST, getSideMenuPanel());
 		mainPanel.add(BorderLayout.SOUTH, getBottomMenuPanel());
@@ -138,16 +75,18 @@ public class CALauncher extends CAApp {
 		return mainPanel;
 	}
 
+	/*
+	 * Returns the side menu panel which initializes all the UI components required for simulation
+	 * Used the open source DesignGridLayout for the creation of grid for better look and feel
+	 */
 	public JPanel getSideMenuPanel() {
 		sideMenuPanel = new JPanel();
 		sideMenuLayout = new DesignGridLayout(sideMenuPanel);
 		sideMenuPanel.setBackground(Color.white);
-
 		sidePanelEmptySpaceBetweenRows(7);
-		title = new JLabel("Crystal Automata App"); //title
+		title = new JLabel("Crystal Automata App");
 		title.setForeground(Color.black);
 		sideMenuLayout.row().center().add(title);
-		//loadInputRowsAndColumns();
 		loadLightDarkRadioButtons();
 		loadRules();
 		loadSleepTimeAndGenerations();
@@ -157,11 +96,12 @@ public class CALauncher extends CAApp {
 		return sideMenuPanel;
 	}
 
+	//Returns bottom menu panel which displays status information
 	private JPanel getBottomMenuPanel() {
 		bottomStatusDisplayPanel = new JPanel();
 		bottomStatusDisplayPanel.setBackground(Color.white);
-		lblStatus = new JLabel("", 10);
-		bottomStatusDisplayPanel.add(lblStatus);
+		statusDisplayText = new JLabel("", 10);
+		bottomStatusDisplayPanel.add(statusDisplayText);
 		return bottomStatusDisplayPanel;
 	}
 
@@ -170,6 +110,7 @@ public class CALauncher extends CAApp {
 		eastPanel.setBackground(Color.white);
 		return eastPanel;
 	}
+
 	private void loadRules(){
 		sidePanelEmptySpaceBetweenRows(3);
 		rulesLabel = new JLabel("Select Rules");
@@ -177,12 +118,12 @@ public class CALauncher extends CAApp {
 		rulesDescription = new JLabel("Rules Description");
 		rulesDescription.setForeground(Color.BLACK);
 		sideMenuLayout.row().center().add(rulesLabel,rulesDescription);
-		final RuleNames rulesNames[] = { RuleNames.SingleSnowflake, RuleNames.RandomSnowFlakes,RuleNames.rule3};
+		final RuleNames rulesNames[] = { RuleNames.SingleSnowflake, RuleNames.RandomSnowFlakes,RuleNames.rule3, RuleNames.rule4};
 		rulesDropDown = new JComboBox<RuleNames>(rulesNames);
 		rulesDropDown.setMaximumRowCount(3);
 		rulesDropDown.setEditable(false);
 		rulesDropDown.addActionListener(this);
-		
+
 		viewRulesDescription = new JButton("View");
 		viewRulesDescription.addActionListener(this);
 		sideMenuLayout.row().center().add(rulesDropDown,viewRulesDescription);
@@ -200,9 +141,9 @@ public class CALauncher extends CAApp {
 		group.add(lightMode);
 		group.add(darkMode);
 		sideMenuLayout.row().center().add(lightMode,darkMode);
-		
+
 	}
-	
+
 	private void loadSleepTimeAndGenerations() {
 		sidePanelEmptySpaceBetweenRows(3);
 		sleepTime = new JLabel("Sleep Time(Secs)");
@@ -223,7 +164,7 @@ public class CALauncher extends CAApp {
 		generationsDropDown.addActionListener(this);
 		sideMenuLayout.row().center().add(sleepTimeDropDown,generationsDropDown);
 	}
-	
+
 	private void loadGridRadioButtons() {
 		sidePanelEmptySpaceBetweenRows(3);
 		grid = new JRadioButton("Grid");
@@ -242,7 +183,7 @@ public class CALauncher extends CAApp {
 		createButton = new JButton("Create");
 		createButton.addActionListener(this);
 		sideMenuLayout.row().center().add(createButton);
-		
+
 	}
 	private void loadSimulationButtons() {
 		sidePanelEmptySpaceBetweenRows(7);
@@ -272,7 +213,7 @@ public class CALauncher extends CAApp {
 			pauseBtn.setEnabled(false);
 			resetBtn.setEnabled(false);
 			rewindBtn.setEnabled(false);
-			
+
 			sideMenuLayout.row().center().add(startBtn);
 			sidePanelEmptySpaceBetweenRows(2);
 			sideMenuLayout.row().center().add(pauseBtn,rewindBtn);
@@ -308,17 +249,10 @@ public class CALauncher extends CAApp {
 			//mainPanel.setBackground(Color.white);
 			CACrystal caCrystal = new CACrystal(rule, rows, cols, initAliveCell);
 			caCrystalSet = new CACrystalSet(caCrystal, maximumGen, sleepTime);
-
-			// maRegionSet.setLayout(new BoxLayout(maRegionSet, BoxLayout.Y_AXIS));
 			caCrystalSet.setLayout(new BorderLayout());
-			// Setting preferred Sizes
-			caCrystalSet.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT - BUTTONS_HEIGHT));
-			caCrystalSet.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT - BUTTONS_HEIGHT));
 			startBtn.setEnabled(true);
 			resetBtn.setEnabled(true);
 			createButton.setEnabled(false);
-			//			rowsDropDown.setEnabled(false);
-			//			columnDropDown.setEnabled(false);
 			generationsDropDown.setEnabled(false);
 			sleepTimeDropDown.setEnabled(false);
 			rulesDropDown.setEnabled(false);
@@ -329,11 +263,13 @@ public class CALauncher extends CAApp {
 			mainPanel.setBackground(isLightMode? Color.white : Color.black);
 			mainPanel.add(BorderLayout.CENTER, caCrystalSet);
 			frame.setVisible(true);
+			statusDisplayText.setText("Crystal Autamata region created successfully!!");
 		} else if ("Start".equals(ae.getActionCommand())) { 
 			startBtn.setEnabled(false);
 			pauseBtn.setEnabled(true);
 			resetBtn.setEnabled(true);
 			caCrystalSet.nextCrystal();
+			statusDisplayText.setText("Crystal growth has begun!!");
 
 		} else if ("Pause".equals(ae.getActionCommand())) { // Pause button event
 
@@ -343,6 +279,7 @@ public class CALauncher extends CAApp {
 			startBtn.setEnabled(true);
 			resetBtn.setEnabled(true);
 			caCrystalSet.pauseThread();
+			statusDisplayText.setText("Crystal growth is paused!!");
 		} else if ("Rewind".equals(ae.getActionCommand())) {
 
 			rewindBtn.setEnabled(false);
@@ -352,6 +289,7 @@ public class CALauncher extends CAApp {
 
 			// Inform the thread to rewind the simulation
 			caCrystalSet.rewindCrystal();
+			statusDisplayText.setText("Crystal growth is being rewinded!!");
 
 		} else if ("Reset".equals(ae.getActionCommand())) { // Stop button event
 
@@ -369,6 +307,7 @@ public class CALauncher extends CAApp {
 			noGrid.setEnabled(true);
 			lightMode.setEnabled(true);
 			darkMode.setEnabled(true);
+			statusDisplayText.setText("Crystal growth is stopped!! Hope you enjoyed it");
 		}
 		else if ("Light Mode".equals(ae.getActionCommand())) { // Stop button event
 			isLightMode = true;
@@ -407,11 +346,48 @@ public class CALauncher extends CAApp {
 		}
 
 	}
-	
-	private void viewDescription() {
-		CARuleDescription instance = CARuleDescription.getInstance();
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		log.info("Window Opened!! Let the Winter Games begin!!");
+
 	}
-	
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		log.info("Window Closing!!");
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		log.info("Window Closed!! Hope you enjoyed crystal growth!!");
+
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		log.info("Window Iconified!!");
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		log.info("Window DeIconified!!");
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		log.info("Window Activated!!");
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		log.info("Window Deactivated!!");
+	}
+
+	private void viewDescription() {
+		CARuleDescription.getInstance();
+	}
+
 	private void sidePanelEmptySpaceBetweenRows(int count)
 	{
 		for (int i = 0; i < count; i++) {

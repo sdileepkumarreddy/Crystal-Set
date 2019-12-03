@@ -59,44 +59,58 @@ public class CACrystal {
 		int innerRowCount = 0;
 		if(this.ruleName == RuleNames.SingleSnowflake) {
 			this.arrCells[x][y] = caFrozen;
-//			this.arrCells[x][y] = caLiquid;
-//			this.arrCells[x-2][y] = caFrozen;
-//			this.arrCells[x+2][y] = caFrozen;
-//			this.arrCells[x-1][y-2] = caFrozen;
-//			this.arrCells[x-1][y+1] = caFrozen;
-//			this.arrCells[x+1][y-2] = caFrozen;
-//			this.arrCells[x+1][y+1] = caFrozen;
-			
 		}
-			else if(this.ruleName == RuleNames.RandomSnowFlakes){
-				
-				for(int i = 0; i < 10; i++) {
-					Random rand = new Random();
-					this.arrCells[rand.nextInt(94)][rand.nextInt(125)] = caFrozen;
+		else if(this.ruleName == RuleNames.RandomSnowFlakes){
+
+			for(int i = 0; i < 15; i++) {
+				Random rand = new Random();
+				this.arrCells[rand.nextInt(94)][rand.nextInt(125)] = caFrozen;
+				this.arrCells[rand.nextInt(94)][rand.nextInt(125)] = caLiquid;
+				this.arrCells[rand.nextInt(94)][rand.nextInt(125)] = caLiquid;
+				this.arrCells[rand.nextInt(94)][rand.nextInt(125)] = caLiquid;
+			}
+		}
+		else if(this.ruleName == RuleNames.rule3){
+
+			this.arrCells[getCrystalRows() / 2][getCrystalColumns() / 2] = caFrozen;
+			this.arrCells[getCrystalRows()/2 - 2][getCrystalColumns()/2 - 2] = caFrozen;
+			this.arrCells[getCrystalRows()/2 - 2][getCrystalColumns()/2 + 2] = caFrozen;
+			this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2 - 2] = caFrozen;
+			this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2 + 2] = caFrozen;
+			this.arrCells[getCrystalRows()/2 -4 ][getCrystalColumns()/2 - 4] = caFrozen;
+			this.arrCells[getCrystalRows()/2 - 4 ][getCrystalColumns()/2 + 4] = caFrozen;
+			this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2 + 4] = caFrozen;
+			this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2 - 4] = caFrozen;
+			this.arrCells[getCrystalRows()/2 -4 ][getCrystalColumns()/2] = caLiquid;
+			this.arrCells[getCrystalRows()/2 - 2 ][getCrystalColumns()/2] = caLiquid;
+			this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2] = caLiquid;
+			this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2] = caLiquid;
+			this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 2] = caLiquid;
+			this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 4] = caLiquid;
+			this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 -2 ] = caLiquid;
+			this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 - 4] = caLiquid;
+		}
+
+		else if(this.ruleName == RuleNames.rule4){
+			for(int i = 0; i < getCrystalRows(); i++)
+			{
+				for(int j =0; j < getCrystalColumns(); j++) {
+					if((i == getCrystalRows()/2 && j %2 == 0) || (j== getCrystalColumns()/2 && i%2 == 1))
+					{
+						this.arrCells[i][j] = caLiquid;
+					}
 				}
 			}
-			else if(this.ruleName == RuleNames.rule3){
-				
-				this.arrCells[getCrystalRows() / 2][getCrystalColumns() / 2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 - 2][getCrystalColumns()/2 - 2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 - 2][getCrystalColumns()/2 + 2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2 - 2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2 + 2] = caFrozen;
-				this.arrCells[getCrystalRows()/2 -4 ][getCrystalColumns()/2 - 4] = caFrozen;
-				this.arrCells[getCrystalRows()/2 - 4 ][getCrystalColumns()/2 + 4] = caFrozen;
-				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2 + 4] = caFrozen;
-				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2 - 4] = caFrozen;
-				this.arrCells[getCrystalRows()/2 -4 ][getCrystalColumns()/2] = caLiquid;
-				this.arrCells[getCrystalRows()/2 - 2 ][getCrystalColumns()/2] = caLiquid;
-				this.arrCells[getCrystalRows()/2 + 2][getCrystalColumns()/2] = caLiquid;
-				this.arrCells[getCrystalRows()/2 + 4][getCrystalColumns()/2] = caLiquid;
-				this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 2] = caLiquid;
-				this.arrCells[getCrystalRows()/2 ][getCrystalColumns()/2 + 4] = caLiquid;
-				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 -2 ] = caLiquid;
-				this.arrCells[getCrystalRows()/2][getCrystalColumns()/2 - 4] = caLiquid;
+			for(int i = 0; i < 47; i = i+2) {
+				this.arrCells[47 - i][62 - i] = caFrozen;
+				this.arrCells[47 + i][62 + i] = caFrozen;
+				this.arrCells[47 - i][62 + i] = caFrozen;
+				this.arrCells[47 + i][62 - i] = caFrozen;
 			}
-		
-		
+		}
+
+
+
 	}
 	public CACrystal createNextCrystal(int counter) {
 
@@ -128,7 +142,7 @@ public class CACrystal {
 					}
 				}
 			}
-			if (newCrystal.ruleName.compareTo(RuleNames.rule3) == 0) {
+			else {
 
 				newCellStates = nextCellStates(counter);
 				for (int i = 0; i < getCrystalRows(); i++) {

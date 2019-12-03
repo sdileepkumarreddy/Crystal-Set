@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 
 enum RuleNames {
-	SingleSnowflake, RandomSnowFlakes, rule3
+	SingleSnowflake, RandomSnowFlakes, rule3, rule4, rule5, rule6
 }
 
 public class CARule extends CACell {
@@ -36,6 +36,9 @@ public class CARule extends CACell {
 		if (ruleName.equals(RuleNames.rule3)) {
 			return getRule3State();
 		}
+		if (ruleName.equals(RuleNames.rule4)) {
+			return getRule4State();
+		}
 		else {
 			return getCellState();
 		}
@@ -58,6 +61,15 @@ public class CARule extends CACell {
 		if (getDesiredNeighborsCount(CACellState.FROZEN) == 1 || this.getCellState() == CACellState.FROZEN) {
 			return CACellState.FROZEN;
 		}
+		if (getDesiredNeighborsCount(CACellState.FROZEN) > 3 && this.getCellState() == CACellState.LIQUID) {
+			return CACellState.FROZEN;
+		}
+		if (getDesiredNeighborsCount(CACellState.VAPOUR) > 4 && this.getCellState() == CACellState.LIQUID) {
+			return CACellState.LIQUID;
+		}
+		if (getDesiredNeighborsCount(CACellState.VAPOUR) < 3 && getDesiredNeighborsCount(CACellState.VAPOUR) > 1 && this.getCellState() == CACellState.VAPOUR) {
+			return CACellState.LIQUID;
+		}
 		return CACellState.VAPOUR;
 
 	}
@@ -79,7 +91,21 @@ public class CARule extends CACell {
 
 	}
 
-
+	private CACellState getRule4State() {
+		if (getDesiredNeighborsCount(CACellState.FROZEN) >1 && this.getCellState() == CACellState.VAPOUR) {
+			return CACellState.FROZEN;
+		}
+		if (getDesiredNeighborsCount(CACellState.FROZEN)  == 1 && this.getCellState() == CACellState.VAPOUR) {
+			return CACellState.LIQUID;
+		}
+		if (getDesiredNeighborsCount(CACellState.LIQUID) > 1 ) {
+			return CACellState.FROZEN;
+		}
+		if (getDesiredNeighborsCount(CACellState.VAPOUR) > 3 && this.getCellState() == CACellState.LIQUID) {
+			return CACellState.FROZEN;
+		}
+		return CACellState.VAPOUR;
+	}
 
 
 }
