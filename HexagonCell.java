@@ -3,6 +3,11 @@ package edu.neu.csye6200.ca;
 import java.awt.Polygon;
 import java.util.function.BiConsumer;
 
+/*
+ * @author: Open source
+ * Class Description: This class is used to create uniform hexagonal grid 
+ */
+
 public class HexagonCell extends Polygon {
 
 	private static final long serialVersionUID = 1L;

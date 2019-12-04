@@ -16,10 +16,17 @@ public abstract class CAApp implements ActionListener, WindowListener {
 	protected JFrame frame = null;
 
 
+	/*
+	 * Default constructor
+	 */
 	
 	public CAApp() {
 		initGUI();
 	}
+	
+	/*
+	 * Initializes GUI by creating a new frame
+	 */
     public void initGUI() {
     	frame = new JFrame();
 		frame.setTitle("Crystal Automata");
@@ -36,6 +43,9 @@ public abstract class CAApp implements ActionListener, WindowListener {
 
     }
     
+    /*
+	 * abstract method
+	 */
     public abstract JPanel getMainPanel() ;
 
 }
